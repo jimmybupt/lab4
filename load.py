@@ -10,18 +10,23 @@ def load():
 	cdim = int(info.readline())
 
 	M = lil_matrix((rdim, cdim))
+	C = []
 
 	print "Reading vectors... ",
 	sys.stdout.flush()
 	i = 0
 	for line in vector_file:
 		data = ast.literal_eval(line)
+		cnt = 0
 		for D in data:
-			M[i, int(D[0])] = float(D[1])
+			if float(D[1]) != 0.:
+				M[i, int(D[0])] = 1
+				cnt += 1
 		i=i+1
+		C.append(cnt)
 		if i==rdim:
 			break
 
-	M = M.toarray()	
+	M = M.tocsr()	
 	print "done"
-	return M, rdim, cdim
+	return M, C, rdim, cdim
