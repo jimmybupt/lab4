@@ -3,8 +3,9 @@ print 'CSE 5243 Similarity Analysis by Kun Liu & Zhe Dong'
 import load
 import minhash
 import time
+import numpy as np
 
-(Data, Cnt, rdim, cdim) = load.load()
+(Data, SparseData, Cnt, rdim, cdim) = load.load()
 
 #convert data into 0/1
 #for i in range(0, rdim):
@@ -35,9 +36,14 @@ for i in range(0, rdim):
 	print "document #"+str(i)
 	row_sim = []
 	for j in range(i+1, rdim):
-		N = Data.getrow(i).dot(Data.getrow(j).transpose())
-		U = Cnt[i]+Cnt[j]-N[0,0]
-		sim = float(N[0,0])/float(U)
+		#N = Data.getrow(i).dot(Data.getrow(j).transpose())
+		N = 0
+		for (a,b) in SparseData[j]:
+			if Data[i][a] == 1:
+				N += 1
+		#N = np.inner(Data.getrow(i), Data.getrow(j))
+		U = Cnt[i]+Cnt[j]-N
+		sim = float(N)/float(U)
 		row_sim.append(sim)
 	True_Sim.append(row_sim)
 print ""
