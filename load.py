@@ -33,7 +33,7 @@ def load():
 			C.append(cnt)
 			M.append(V)
 			P.append(N)
-		control = (control + 1) % 3
+		control = (control + 1) % 9
 		if i==rdim:
 			break
 

@@ -49,4 +49,19 @@ for i in range(0, rdim):
 print ""
 print "True similarity calculation took  "+str(time.time() - start_time)+" seconds"
 
-M = minhash(cdim, 32)
+M = minhash.minhash(cdim, 32)
+Signatures = []
+for D in Data:
+	S = M.sig(Data[i])
+	Signatures.append(S)
+
+Hash_Sim = []
+for i in range(0, rdim):
+	row_sim = []
+	for j in range(i, rdim):
+		N = 0
+		for k in range(0, 32):
+			if(Signatures[i][k]==Signatures[j][k]):
+				N += 1
+		row_sim.append(N)
+	Hash_Sim.append(row_sim)
