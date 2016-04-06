@@ -3,7 +3,6 @@ print 'CSE 5243 Similarity Analysis by Kun Liu & Zhe Dong'
 import load
 import minhash
 import time
-import numpy as np
 
 (Data, SparseData, Cnt, rdim, cdim) = load.load()
 
@@ -49,19 +48,33 @@ for i in range(0, rdim):
 print ""
 print "True similarity calculation took  "+str(time.time() - start_time)+" seconds"
 
-M = minhash.minhash(cdim, 32)
+
+#compute hash similarity
+start_time = time.time()
+K=32 # number of hash functions
+M = minhash.minhash(cdim, K)
 Signatures = []
 for D in Data:
 	S = M.sig(Data[i])
 	Signatures.append(S)
+ 
+print "Creating signiture took  "+str(time.time() - start_time)+" seconds"
 
+start_time = time.time()
 Hash_Sim = []
 for i in range(0, rdim):
 	row_sim = []
 	for j in range(i, rdim):
 		N = 0
-		for k in range(0, 32):
+		for k in range(0, K):
 			if(Signatures[i][k]==Signatures[j][k]):
 				N += 1
 		row_sim.append(N)
 	Hash_Sim.append(row_sim)
+
+print "Hash similarity calculation took  "+str(time.time() - start_time)+" seconds"
+
+start_time=time.time()
+print ""
+print "MSE between the estimate and the true similarity is "+str(similarity_MSE(True_Sim,Hash_Sim))
+print "Comparision took " +str(time.time() - start_time)+" seconds"
