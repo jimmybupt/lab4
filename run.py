@@ -24,15 +24,14 @@ def similarity_MSE(true_sim, hash_sim):
         for j in range(0, len(true_sim[i]) ):
             mse += pow(true_sim[i][j] - hash_sim[i][j],2)
     
-    return mse / len(true_sim)
-    
+    return mse / len(true_sim)/len(true_sim[0])
     
 #compute true similarity
 start_time = time.time()
 print "Calculate true similarities"
 True_Sim = []
 for i in range(0, rdim):
-	print "document #"+str(i)
+	#print "document #"+str(i)
 	row_sim = []
 	for j in range(i+1, rdim):
 		#N = Data.getrow(i).dot(Data.getrow(j).transpose())
@@ -45,37 +44,42 @@ for i in range(0, rdim):
 		sim = float(N)/float(U)
 		row_sim.append(sim)
 	True_Sim.append(row_sim)
-print ""
+
 print "True similarity calculation took  "+str(time.time() - start_time)+" seconds"
 
 
 #compute hash similarity
 start_time = time.time()
-K=32 # number of hash functions
-M = minhash.minhash(cdim, K)
-Signatures = []
-for D in Data:
-	S = M.sig(Data[i])
-	print(S)
-	Signatures.append(S)
- 
-print "Creating signiture took  "+str(time.time() - start_time)+" seconds"
+K=[16, 32, 64, 128, 256] # number of hash functions
 
-start_time = time.time()
-Hash_Sim = []
-for i in range(0, rdim):
-	row_sim = []
-	for j in range(i, rdim):
-		N = 0
-		for k in range(0, K):
-			if(Signatures[i][k]==Signatures[j][k]):
-				N += 1
-		row_sim.append(N)
-	Hash_Sim.append(row_sim)
+for k_value in K:
+    M = minhash.minhash(cdim, k_value)
+    Signatures = []
+    for D in Data:
+    	S = M.sig(D)
+    	Signatures.append(S)
+     
+    print ""
+    print "number of hash functions: " +str(k_value)
+    print "Creating signiture took  "+str(time.time() - start_time)+" seconds"
 
-print "Hash similarity calculation took  "+str(time.time() - start_time)+" seconds"
-
-start_time=time.time()
-print ""
-print "MSE between the estimate and the true similarity is "+str(similarity_MSE(True_Sim,Hash_Sim))
-print "Comparision took " +str(time.time() - start_time)+" seconds"
+    start_time = time.time()
+    Hash_Sim = []
+    for i in range(0, rdim):
+    	row_sim = []
+    	for j in range(i+1, rdim):
+    		N = 0
+    		for k in range(0, k_value):
+    			if(Signatures[i][k]==Signatures[j][k]):
+    				N += 1
+    		U=2*k_value-N
+    		sim = float(N)/float(U)     
+    		row_sim.append(sim)
+    	Hash_Sim.append(row_sim)
+    
+    print "Hash similarity calculation took  "+str(time.time() - start_time)+" seconds"
+    
+    start_time=time.time()
+    
+    print "MSE between the estimate and the true similarity is "+str(similarity_MSE(True_Sim,Hash_Sim)*1000)+"E-03"
+    print "Comparision took " +str(time.time() - start_time)+" seconds"
