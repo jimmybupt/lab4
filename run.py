@@ -56,6 +56,7 @@ M = minhash.minhash(cdim, K)
 Signatures = []
 for D in Data:
 	S = M.sig(Data[i])
+	print(S)
 	Signatures.append(S)
  
 print "Creating signiture took  "+str(time.time() - start_time)+" seconds"
