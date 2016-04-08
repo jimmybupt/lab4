@@ -4,6 +4,8 @@ import load
 import minhash
 import time
 
+begin_time=time.time()
+
 (Data, SparseData, Cnt, rdim, cdim) = load.load()
 
 #convert data into 0/1
@@ -82,4 +84,7 @@ for k_value in K:
     start_time=time.time()
     
     print "MSE between the estimate and the true similarity is "+str(similarity_MSE(True_Sim,Hash_Sim)*1000)+"E-03"
-    print "Calculating MSE took " +str(time.time() - start_time)+" seconds"
+    print "MSE calculation took " +str(time.time() - start_time)+" seconds"
+
+print ""
+print "Total running time is "+str(time.time() - begin_time)
