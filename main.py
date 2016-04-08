@@ -82,4 +82,4 @@ for k_value in K:
     start_time=time.time()
     
     print "MSE between the estimate and the true similarity is "+str(similarity_MSE(True_Sim,Hash_Sim)*1000)+"E-03"
-    print "Comparision took " +str(time.time() - start_time)+" seconds"
+    print "Calculating MSE took " +str(time.time() - start_time)+" seconds"
