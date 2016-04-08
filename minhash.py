@@ -7,7 +7,10 @@ class minhash:
 		self.perm = []
 		for i in range(0,k):
 			self.perm.append(np.random.permutation(size))
-	
+
+	def show(self):
+		print self.perm	
+
 	def sig(self, vector):
 		hash = []
 		for i in range(0, self.k):
